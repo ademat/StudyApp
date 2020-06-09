@@ -10,12 +10,12 @@
   "author": "Adela Matouskova",
   "license": "ISC",
   "devDependencies": {
-    "dotenv": "^8.2.0",
-    "express": "^4.17.1",
-    "mongoose": "^5.9.18",
     "nodemon": "^2.0.4"
   },
   "dependencies": {
-    "node": "^14.4.0"
+    "node": "^14.4.0",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "mongoose": "^5.9.18"
   }
 }
