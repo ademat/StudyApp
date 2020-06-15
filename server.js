@@ -2,6 +2,7 @@ const express = require('express');
 const dotenv = require('dotenv');
 const colors = require('colors');
 const deckRoutes = require('./routes/decks');
+const vocabularyRoutes = require('./routes/vocabulary');
 const connectDB = require('./config/db');
 const errorHandler = require('./middleware/error');
 
@@ -12,6 +13,7 @@ const app = express();
 app.use(express.json());
 
 app.use('/api/v1/decks', deckRoutes);
+app.use('/api/v1/vocabulary', vocabularyRoutes);
 
 app.use(errorHandler);
 
