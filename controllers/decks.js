@@ -13,7 +13,7 @@ exports.getAllDecks = async (req, res, next) => {
     const reqQuery = { ...req.query };
 
     // Fields to exclude from filtering
-    const removeFields = ['select', 'sort'];
+    const removeFields = ['select', 'sort', 'page', 'limit'];
     removeFields.forEach((param) => delete reqQuery[param]);
 
     // Create query string
@@ -39,10 +39,36 @@ exports.getAllDecks = async (req, res, next) => {
       query = query.sort('name');
     }
 
+    // Pagination
+    const page = parseInt(req.query.page, 10) || 1;
+    const limit = parseInt(req.query.limit, 10) || 10;
+    const startIndex = (page - 1) * limit;
+    const endIndex = page * limit;
+    const total = await Deck.countDocuments();
+
+    query = query.skip(startIndex).limit(limit);
+
     // Executing query
     const decks = await query;
 
-    res.status(200).json({ succes: true, data: decks });
+    // Pagination result
+    const pagination = {};
+
+    if (endIndex < total) {
+      pagination.next = {
+        page: page + 1,
+        limit,
+      };
+    }
+
+    if (startIndex > 0) {
+      pagination.prev = {
+        page: page - 1,
+        limit,
+      };
+    }
+
+    res.status(200).json({ succes: true, pagination, data: decks });
   } catch (err) {
     next(err);
   }
