@@ -5,8 +5,8 @@ const {
   getAllDecks, getDeck, createDeck, updateDeck, deleteDeck,
 } = require('../controllers/decks');
 
-router.route('/').get(getAllDecks);
-router.route('/:id').get(getDeck).post(createDeck).put(updateDeck)
+router.route('/').get(getAllDecks).post(createDeck);
+router.route('/:id').get(getDeck).put(updateDeck)
   .delete(deleteDeck);
 
 module.exports = router;

@@ -8,7 +8,7 @@ const connectDB = async () => {
       useFindAndModify: false,
       useUnifiedTopology: true,
     });
-    console.log(`Connected to database ${conn.connection.host}.`);
+    console.log(`Connected to database ${conn.connection.host}.`.cyan.underline.bold);
   } catch (error) {
     console.log(error);
   }

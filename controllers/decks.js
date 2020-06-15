@@ -1,3 +1,4 @@
+const ErrorResponse = require('../utils/errorResponse');
 const Deck = require('../models/Deck');
 
 // @desc Get all available decks
@@ -7,8 +8,8 @@ exports.getAllDecks = async (req, res, next) => {
   try {
     const decks = await Deck.find();
     res.status(200).json({ succes: true, data: decks });
-  } catch (error) {
-    res.status(400).json({ succes: false });
+  } catch (err) {
+    next(err);
   }
 };
 
@@ -18,9 +19,12 @@ exports.getAllDecks = async (req, res, next) => {
 exports.getDeck = async (req, res, next) => {
   try {
     const deck = await Deck.findById(req.params.id);
+    if (!deck) {
+      return next(new ErrorResponse(`Deck not found with id of ${req.params.id}`, 404));
+    }
     res.json({ succes: true, data: deck });
-  } catch (error) {
-    res.status(400).json({ succes: false });
+  } catch (err) {
+    next(err);
   }
 };
 
@@ -31,8 +35,8 @@ exports.createDeck = async (req, res, next) => {
   try {
     const deck = await Deck.create(req.body);
     res.json({ succes: true, data: deck });
-  } catch (error) {
-    res.status(400).json({ succes: false });
+  } catch (err) {
+    next(err);
   }
 };
 
@@ -42,9 +46,12 @@ exports.createDeck = async (req, res, next) => {
 exports.updateDeck = async (req, res, next) => {
   try {
     const deck = await Deck.findByIdAndUpdate(req.params.id, req.body);
+    if (!deck) {
+      return next(new ErrorResponse(`Deck not found with id of ${req.params.id}`, 404));
+    }
     res.json({ succes: true, data: deck });
-  } catch (error) {
-    res.status(400).json({ succes: false });
+  } catch (err) {
+    next(err);
   }
 };
 
@@ -54,8 +61,11 @@ exports.updateDeck = async (req, res, next) => {
 exports.deleteDeck = async (req, res, next) => {
   try {
     const deck = await Deck.findByIdAndDelete(req.params.id);
+    if (!deck) {
+      return next(new ErrorResponse(`Deck not found with id of ${req.params.id}`, 404));
+    }
     res.json({ succes: true, data: deck });
-  } catch (error) {
-    res.status(400).json({ succes: false });
+  } catch (err) {
+    next(err);
   }
 };

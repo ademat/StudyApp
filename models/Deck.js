@@ -5,6 +5,7 @@ const DeckSchema = new mongoose.Schema({
     type: String,
     unique: true,
     maxlength: 20,
+    required: [true, 'Please add Deck name'],
   },
   countAll: Number,
   countNew: Number,
