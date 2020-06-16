@@ -1,5 +1,6 @@
 const ErrorResponse = require('../utils/errorResponse');
 const Vocabulary = require('../models/Vocabulary');
+const Deck = require('../models/Deck');
 
 // @desc    Get all available vocabulary
 // @url     GET /api/v1/vocabulary
@@ -24,6 +25,98 @@ exports.getVocabulary = async (req, res, next) => {
       success: true,
       count: vocabulary.length,
       data: vocabulary,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// @desc    Get single vocabulary
+// @url     GET /api/v1/vocabulary/:id
+// @access  private
+exports.getSingleVocabulary = async (req, res, next) => {
+  try {
+    const vocabulary = await Vocabulary.findById(req.params.id).populate({
+      path: 'deck',
+      select: 'name',
+    });
+
+    if (!vocabulary) {
+      return next(new ErrorResponse(`Vocabulary with id ${req.params.id} was not found`, 404));
+    }
+
+    res.status(200).json({
+      success: true,
+      data: vocabulary,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// @desc    Add single vocabulary
+// @url     POST /api/v1/decks/:deckId/vocabulary
+// @access  private
+exports.addVocabulary = async (req, res, next) => {
+  try {
+    req.body.deck = req.params.deckId;
+
+    const deck = await Deck.findById(req.params.deckId);
+
+    if (!deck) {
+      return next(new ErrorResponse(`Deck with id ${req.params.deckId} was not found`, 404));
+    }
+
+    const vocabulary = await Vocabulary.create(req.body);
+
+    res.status(200).json({
+      success: true,
+      data: vocabulary,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// @desc    Update vocabulary
+// @url     PUT /api/v1/decks/:id
+// @access  private
+exports.updateVocabulary = async (req, res, next) => {
+  try {
+    let vocabulary = await Vocabulary.findById(req.params.id);
+
+    if (!vocabulary) {
+      return next(new ErrorResponse(`Vocabulary with id ${req.params.id} was not found`, 404));
+    }
+
+    vocabulary = await Vocabulary.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true,
+    });
+
+    res.status(200).json({
+      success: true,
+      data: vocabulary,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+// @desc    Delete vocabulary
+// @url     DELETE /api/v1/decks/:id
+// @access  private
+exports.deleteVocabulary = async (req, res, next) => {
+  try {
+    const vocabulary = await Vocabulary.findByIdAndDelete(req.params.id);
+
+    if (!vocabulary) {
+      return next(new ErrorResponse(`Vocabulary with id ${req.params.id} was not found`, 404));
+    }
+
+    res.status(200).json({
+      success: true,
+      data: {},
     });
   } catch (err) {
     next(err);

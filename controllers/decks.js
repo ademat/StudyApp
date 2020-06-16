@@ -124,7 +124,7 @@ exports.deleteDeck = async (req, res, next) => {
     if (!deck) {
       return next(new ErrorResponse(`Deck not found with id of ${req.params.id}`, 404));
     }
-    res.json({ succes: true, data: deck });
+    res.json({ succes: true, data: {} });
 
     deck.remove();
   } catch (err) {
