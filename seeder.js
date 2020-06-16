@@ -22,7 +22,7 @@ const vocabulary = JSON.parse(fs.readFileSync(`${__dirname}/_data/vocabulary.jso
 const importData = async () => {
   try {
     await Deck.create(decks);
-    await Vocabulary.create(vocabulary);
+    // await Vocabulary.create(vocabulary);
 
     console.log('Data Imported...'.green.inverse);
     process.exit();

@@ -108,11 +108,13 @@ exports.updateVocabulary = async (req, res, next) => {
 // @access  private
 exports.deleteVocabulary = async (req, res, next) => {
   try {
-    const vocabulary = await Vocabulary.findByIdAndDelete(req.params.id);
+    const vocabulary = await Vocabulary.findById(req.params.id);
 
     if (!vocabulary) {
       return next(new ErrorResponse(`Vocabulary with id ${req.params.id} was not found`, 404));
     }
+
+    vocabulary.remove();
 
     res.status(200).json({
       success: true,

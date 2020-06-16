@@ -3,36 +3,42 @@
     "front": "hello",
     "back": "ahoj",
     "status": 1,
+    "new": true,
     "deck": "5ee78f9aee83af34282679f4"
   },
   {
     "front": "dog",
     "back": "pes",
     "status": 2,
+    "new": false,
     "deck": "5ee78f9aee83af34282679f4"
   },
   {
     "front": "page",
     "back": "stranka",
     "status": 3,
+    "new": true,
     "deck": "5ee78f9aee83af34282679f4"
   },
   {
     "front": "Math.random()",
     "back": "Generator nahodnych cisel od 0 do 1",
     "status": 4,
+    "new": true,
     "deck": "5ee78f9aee83af34282679f5"
   },
   {
     "front": "console.log()",
     "back": "vypsani testu do konzole",
     "status": 5,
+    "new": false,
     "deck": "5ee78f9aee83af34282679f5"
   },
   {
     "front": "node server.js",
     "back": "spusteni souboru server.js",
     "status": 6,
+    "new": false,
     "deck": "5ee78f9aee83af34282679f5"
   }
 ]
