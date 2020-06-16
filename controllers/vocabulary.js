@@ -12,7 +12,10 @@ exports.getVocabulary = async (req, res, next) => {
     if (req.params.deckId) {
       query = Vocabulary.find({ deck: req.params.deckId });
     } else {
-      query = Vocabulary.find();
+      query = Vocabulary.find().populate({
+        path: 'deck',
+        select: 'name',
+      });
     }
 
     const vocabulary = await query;

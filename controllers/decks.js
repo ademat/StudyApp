@@ -22,7 +22,7 @@ exports.getAllDecks = async (req, res, next) => {
     queryStr = queryStr.replace(/\b(gt|gte|lt|lte|in)\b/g, (match) => `$${match}`);
 
     // finding documents
-    query = Deck.find(JSON.parse(queryStr));
+    query = Deck.find(JSON.parse(queryStr)).populate('vocabulary');
 
     // Select fields
     if (req.query.select) {
@@ -120,11 +120,13 @@ exports.updateDeck = async (req, res, next) => {
 // @access  private
 exports.deleteDeck = async (req, res, next) => {
   try {
-    const deck = await Deck.findByIdAndDelete(req.params.id);
+    const deck = await Deck.findById(req.params.id);
     if (!deck) {
       return next(new ErrorResponse(`Deck not found with id of ${req.params.id}`, 404));
     }
     res.json({ succes: true, data: deck });
+
+    deck.remove();
   } catch (err) {
     next(err);
   }
