@@ -1,8 +1,10 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const colors = require('colors');
+const cookieParser = require('cookie-parser');
 const deckRoutes = require('./routes/decks');
 const vocabularyRoutes = require('./routes/vocabulary');
+const authRoutes = require('./routes/auth');
 const connectDB = require('./config/db');
 const errorHandler = require('./middleware/error');
 
@@ -12,8 +14,11 @@ const app = express();
 
 app.use(express.json());
 
+app.use(cookieParser());
+
 app.use('/api/v1/decks', deckRoutes);
 app.use('/api/v1/vocabulary', vocabularyRoutes);
+app.use('/api/v1/auth', authRoutes);
 
 app.use(errorHandler);
 

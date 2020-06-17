@@ -9,11 +9,13 @@ const vocabularyRouter = require('./vocabulary');
 
 const router = express.Router();
 
+const { protect } = require('../middleware/auth');
+
 // Re-route into other resource routers
 router.use('/:deckId/vocabulary', vocabularyRouter);
 
-router.route('/').get(getAllDecks).post(createDeck);
-router.route('/:id').get(getDeck).put(updateDeck)
-  .delete(deleteDeck);
+router.route('/').get(protect, getAllDecks).post(protect, createDeck);
+router.route('/:id').get(protect, getDeck).put(protect, updateDeck)
+  .delete(protect, deleteDeck);
 
 module.exports = router;
