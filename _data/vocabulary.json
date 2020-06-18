@@ -40,5 +40,11 @@
     "status": 6,
     "new": false,
     "deck": "5ee78f9aee83af34282679f5"
+  },
+  {
+    "front": "ola",
+    "back": "ahoj",
+    "status": 1,
+    "deck": "5ee78f9aee83af34282679f2"
   }
 ]

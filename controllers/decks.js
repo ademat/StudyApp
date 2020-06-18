@@ -93,7 +93,11 @@ exports.getDeck = async (req, res, next) => {
 // @access  private
 exports.createDeck = async (req, res, next) => {
   try {
+    // Add user to req.body
+    req.body.user = req.user.id;
+
     const deck = await Deck.create(req.body);
+
     res.json({ succes: true, data: deck });
   } catch (err) {
     next(err);
@@ -121,12 +125,19 @@ exports.updateDeck = async (req, res, next) => {
 exports.deleteDeck = async (req, res, next) => {
   try {
     const deck = await Deck.findById(req.params.id);
+
     if (!deck) {
       return next(new ErrorResponse(`Deck not found with id of ${req.params.id}`, 404));
     }
-    res.json({ succes: true, data: {} });
+
+    // Make sure user is deck owner
+    if (deck.user.toString() !== req.user.id) {
+      return next(new ErrorResponse(`User ${req.user.id} is not authorized to delete this bootcamp`, 401));
+    }
 
     deck.remove();
+
+    res.status(200).json({ succes: true, data: {} });
   } catch (err) {
     next(err);
   }

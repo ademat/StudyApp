@@ -1,0 +1,26 @@
+[
+  {
+    "_id": "5ee78f9aee83af34282679a1",
+    "name": "John",
+    "email": "johnie34@gmail.com",
+    "password": "hello_world123"
+  },
+  {
+    "_id": "5ee78f9aee83af34282679a2",
+    "name": "Kevin",
+    "email": "kev23@gmail.com",
+    "password": "hello_world123"
+  },
+  {
+    "_id": "5ee78f9aee83af34282679a3",
+    "name": "Marie",
+    "email": "mariemarie@gmail.com",
+    "password": "hello_world123"
+  },
+  {
+    "_id": "5ee78f9aee83af34282679a4",
+    "name": "George",
+    "email": "georgie1@gmail.com",
+    "password": "hello_world123"
+  }
+]

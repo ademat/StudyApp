@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const VocabularySchema = new mongoose.Schema({
   front: {
     type: String,
+    unique: true,
     required: [true, 'Please add vocabulary front side'],
   },
   back: {
@@ -27,7 +28,11 @@ const VocabularySchema = new mongoose.Schema({
     ref: 'Deck',
     required: true,
   },
-
+  user: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'User',
+    required: true,
+  },
 });
 
 // Recalculate Decks' number of vocabulary, new vocabulary and reviews

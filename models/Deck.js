@@ -12,6 +12,11 @@ const DeckSchema = new mongoose.Schema({
   countAll: Number,
   countNew: Number,
   countReview: Number,
+  user: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'User',
+    required: true,
+  },
 }, {
   toJSON: { virtuals: true },
   toObject: { virtuals: true },
