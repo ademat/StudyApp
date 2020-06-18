@@ -3,17 +3,22 @@ const Vocabulary = require('../models/Vocabulary');
 const Deck = require('../models/Deck');
 
 // @desc    Get all available vocabulary
-// @url     GET /api/v1/vocabulary
-// @url     GET /api/v1/decks/:decksId/vocabulary
+// @url     GET /api/v1/vocabulary/:userId
+// @url     GET /api/v1/decks/:userId/:decksId/vocabulary
 // @access  private
 exports.getVocabulary = async (req, res, next) => {
   try {
+    // Make sure user is authorised to access route
+    if (req.params.userId !== req.user.id) {
+      return next(new ErrorResponse(`User ${req.user.id} is not authorized to access this route`, 401));
+    }
+
     let query;
 
     if (req.params.deckId) {
-      query = Vocabulary.find({ deck: req.params.deckId });
+      query = Vocabulary.find({ deck: req.params.deckId, user: req.params.userId });
     } else {
-      query = Vocabulary.find().populate({
+      query = Vocabulary.find({ user: req.params.userId }).populate({
         path: 'deck',
         select: 'name',
       });
@@ -32,16 +37,21 @@ exports.getVocabulary = async (req, res, next) => {
 };
 
 // @desc    Get single vocabulary
-// @url     GET /api/v1/vocabulary/:id
+// @url     GET /api/v1/vocabulary/:userId/:id
 // @access  private
 exports.getSingleVocabulary = async (req, res, next) => {
   try {
-    const vocabulary = await Vocabulary.findById(req.params.id).populate({
+    // Make sure user is authorised to access route
+    if (req.params.userId !== req.user.id) {
+      return next(new ErrorResponse(`User ${req.user.id} is not authorized to access this route`, 401));
+    }
+
+    const vocabulary = await Vocabulary.find({ _id: req.params.id, user: req.params.userId }).populate({
       path: 'deck',
       select: 'name',
     });
 
-    if (!vocabulary) {
+    if (vocabulary.length === 0) {
       return next(new ErrorResponse(`Vocabulary with id ${req.params.id} was not found`, 404));
     }
 
@@ -55,15 +65,22 @@ exports.getSingleVocabulary = async (req, res, next) => {
 };
 
 // @desc    Add single vocabulary
-// @url     POST /api/v1/decks/:deckId/vocabulary
+// @url     POST /api/v1/decks/:deckId/vocabulary/:userId
 // @access  private
 exports.addVocabulary = async (req, res, next) => {
   try {
+    // Make sure user is authorised to access route
+    if (req.params.userId !== req.user.id) {
+      return next(new ErrorResponse(`User ${req.user.id} is not authorized to access this route`, 401));
+    }
+
     req.body.deck = req.params.deckId;
 
-    const deck = await Deck.findById(req.params.deckId);
+    req.body.user = req.params.userId;
 
-    if (!deck) {
+    const deck = await Deck.find({ _id: req.params.deckId, user: req.params.userId });
+
+    if (deck.length === 0) {
       return next(new ErrorResponse(`Deck with id ${req.params.deckId} was not found`, 404));
     }
 
@@ -79,13 +96,18 @@ exports.addVocabulary = async (req, res, next) => {
 };
 
 // @desc    Update vocabulary
-// @url     PUT /api/v1/decks/:id
+// @url     PUT /api/v1/decks/:userId/:id
 // @access  private
 exports.updateVocabulary = async (req, res, next) => {
   try {
-    let vocabulary = await Vocabulary.findById(req.params.id);
+    // Make sure user is authorised to access route
+    if (req.params.userId !== req.user.id) {
+      return next(new ErrorResponse(`User ${req.user.id} is not authorized to access this route`, 401));
+    }
 
-    if (!vocabulary) {
+    let vocabulary = await Vocabulary.find({ _id: req.params.id, user: req.params.userId });
+
+    if (vocabulary.length === 0) {
       return next(new ErrorResponse(`Vocabulary with id ${req.params.id} was not found`, 404));
     }
 
@@ -104,17 +126,22 @@ exports.updateVocabulary = async (req, res, next) => {
 };
 
 // @desc    Delete vocabulary
-// @url     DELETE /api/v1/decks/:id
+// @url     DELETE /api/v1/decks/:userId/:id
 // @access  private
 exports.deleteVocabulary = async (req, res, next) => {
   try {
-    const vocabulary = await Vocabulary.findById(req.params.id);
+    // Make sure user is authorised to access route
+    if (req.params.userId !== req.user.id) {
+      return next(new ErrorResponse(`User ${req.user.id} is not authorized to access this route`, 401));
+    }
 
-    if (!vocabulary) {
+    const vocabulary = await Vocabulary.find({ _id: req.params.id, user: req.params.userId });
+
+    if (vocabulary.length === 0) {
       return next(new ErrorResponse(`Vocabulary with id ${req.params.id} was not found`, 404));
     }
 
-    vocabulary.remove();
+    vocabulary[0].remove();
 
     res.status(200).json({
       success: true,

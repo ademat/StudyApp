@@ -14,8 +14,8 @@ const { protect } = require('../middleware/auth');
 // Re-route into other resource routers
 router.use('/:deckId/vocabulary', vocabularyRouter);
 
-router.route('/').get(protect, getAllDecks).post(protect, createDeck);
-router.route('/:id').get(protect, getDeck).put(protect, updateDeck)
+router.route('/:userId').get(protect, getAllDecks).post(protect, createDeck);
+router.route('/:userId/:id').get(protect, getDeck).put(protect, updateDeck)
   .delete(protect, deleteDeck);
 
 module.exports = router;
