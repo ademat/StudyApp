@@ -1,11 +1,18 @@
 const ErrorResponse = require('../utils/errorResponse');
 const Deck = require('../models/Deck');
+const Vocabulary = require('../models/Vocabulary');
 
 // @desc    Get all available decks
 // @url     GET /api/v1/decks
 // @access  private
 exports.getAllDecks = async (req, res, next) => {
   try {
+    const all_decks = await Deck.find();
+
+    all_decks.forEach((deck) => {
+      Vocabulary.getVocabCount(deck._id);
+    });
+
     let query;
 
     // copy req.query

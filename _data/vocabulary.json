@@ -4,47 +4,54 @@
     "back": "ahoj",
     "status": 1,
     "new": true,
-    "deck": "5ee78f9aee83af34282679f4"
+    "deck": "5ee78f9aee83af34282679f4",
+    "user": "5ee78f9aee83af34282679a1"
   },
   {
     "front": "dog",
     "back": "pes",
     "status": 2,
     "new": false,
-    "deck": "5ee78f9aee83af34282679f4"
+    "deck": "5ee78f9aee83af34282679f4",
+    "user": "5ee78f9aee83af34282679a1"
   },
   {
     "front": "page",
     "back": "stranka",
     "status": 3,
     "new": true,
-    "deck": "5ee78f9aee83af34282679f4"
+    "deck": "5ee78f9aee83af34282679f4",
+    "user": "5ee78f9aee83af34282679a1"
   },
   {
     "front": "Math.random()",
     "back": "Generator nahodnych cisel od 0 do 1",
     "status": 4,
     "new": true,
-    "deck": "5ee78f9aee83af34282679f5"
+    "deck": "5ee78f9aee83af34282679f5",
+    "user": "5ee78f9aee83af34282679a2"
   },
   {
     "front": "console.log()",
     "back": "vypsani testu do konzole",
     "status": 5,
     "new": false,
-    "deck": "5ee78f9aee83af34282679f5"
+    "deck": "5ee78f9aee83af34282679f5",
+    "user": "5ee78f9aee83af34282679a2"
   },
   {
     "front": "node server.js",
     "back": "spusteni souboru server.js",
     "status": 6,
     "new": false,
-    "deck": "5ee78f9aee83af34282679f5"
+    "deck": "5ee78f9aee83af34282679f5",
+    "user": "5ee78f9aee83af34282679a2"
   },
   {
     "front": "ola",
     "back": "ahoj",
     "status": 1,
-    "deck": "5ee78f9aee83af34282679f2"
+    "deck": "5ee78f9aee83af34282679f2",
+    "user": "5ee78f9aee83af34282679a3"
   }
 ]
