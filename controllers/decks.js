@@ -14,9 +14,18 @@ exports.getAllDecks = async (req, res, next) => {
 
     const all_decks = await Deck.find({ user: req.user.id }).populate('vocabulary');
 
-    all_decks.forEach((deck) => {
-      Vocabulary.getVocabCount(deck._id);
+    // eslint-disable-next-line no-inner-declarations
+    async function asyncForEach(array, callback) {
+      for (let index = 0; index < array.length; index++) {
+        await callback(array[index], index, array);
+      }
+    }
+
+    await asyncForEach(all_decks, async (deck) => {
+      await Vocabulary.getVocabCount(deck._id);
     });
+
+    const decks = await Deck.find({ user: req.user.id }).populate('vocabulary');
 
     // let query;
 
@@ -79,7 +88,7 @@ exports.getAllDecks = async (req, res, next) => {
     //   };
     // }
 
-    res.status(200).json({ succes: true, data: all_decks });
+    res.status(200).json({ succes: true, data: decks });
   } catch (err) {
     next(err);
   }

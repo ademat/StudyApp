@@ -23,8 +23,25 @@ const UserSchema = new mongoose.Schema({
     minlength: 6,
     select: false,
   },
+  role: {
+    type: String,
+    enum: ['user', 'admin'],
+    required: true,
+    default: 'user',
+  },
   resetPasswordToken: String,
   resetPasswordExpire: Date,
+}, {
+  toJSON: { virtuals: true },
+  toObject: { virtuals: true },
+});
+
+// Reverse populate with virtuals
+UserSchema.virtual('decks', {
+  ref: 'Deck',
+  localField: '_id',
+  foreignField: 'user',
+  justOne: false,
 });
 
 // Encrypt password using bcrypt

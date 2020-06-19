@@ -22,5 +22,12 @@
     "name": "George",
     "email": "georgie1@gmail.com",
     "password": "hello_world123"
+  },
+  {
+    "_id": "5ee78f9aee83af34282679a0",
+    "name": "Adela",
+    "email": "adela@gmail.com",
+    "password": "hello_world123",
+    "role": "admin"
   }
 ]

@@ -5,6 +5,7 @@ const cookieParser = require('cookie-parser');
 const deckRoutes = require('./routes/decks');
 const vocabularyRoutes = require('./routes/vocabulary');
 const authRoutes = require('./routes/auth');
+const userRoutes = require('./routes/users');
 const connectDB = require('./config/db');
 const errorHandler = require('./middleware/error');
 
@@ -19,6 +20,7 @@ app.use(cookieParser());
 app.use('/api/v1/decks', deckRoutes);
 app.use('/api/v1/vocabulary', vocabularyRoutes);
 app.use('/api/v1/auth', authRoutes);
+app.use('/api/v1/users', userRoutes);
 
 app.use(errorHandler);
 
