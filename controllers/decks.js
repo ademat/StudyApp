@@ -8,11 +8,11 @@ const Vocabulary = require('../models/Vocabulary');
 exports.getAllDecks = async (req, res, next) => {
   try {
     // Make sure user is authorised to access route
-    if (req.params.userId !== req.user.id) {
+    if (req.params.userId !== req.user.id && req.user.role !== 'admin') {
       return next(new ErrorResponse(`User ${req.user.id} is not authorized to access this route`, 401));
     }
 
-    const all_decks = await Deck.find({ user: req.user.id }).populate('vocabulary');
+    const all_decks = await Deck.find({ user: req.params.userId }).populate('vocabulary');
 
     // eslint-disable-next-line no-inner-declarations
     async function asyncForEach(array, callback) {
@@ -25,7 +25,7 @@ exports.getAllDecks = async (req, res, next) => {
       await Vocabulary.getVocabCount(deck._id);
     });
 
-    const decks = await Deck.find({ user: req.user.id }).populate('vocabulary');
+    const decks = await Deck.find({ user: req.params.userId }).populate('vocabulary');
 
     // let query;
 
@@ -100,7 +100,7 @@ exports.getAllDecks = async (req, res, next) => {
 exports.getDeck = async (req, res, next) => {
   try {
     // Make sure user is authorised to access route
-    if (req.params.userId !== req.user.id) {
+    if (req.params.userId !== req.user.id && req.user.role !== 'admin') {
       return next(new ErrorResponse(`User ${req.user.id} is not authorized to access this route`, 401));
     }
 
@@ -121,12 +121,12 @@ exports.getDeck = async (req, res, next) => {
 exports.createDeck = async (req, res, next) => {
   try {
     // Make sure user is authorised to access route
-    if (req.params.userId !== req.user.id) {
+    if (req.params.userId !== req.user.id && req.user.role !== 'admin') {
       return next(new ErrorResponse(`User ${req.user.id} is not authorized to access this route`, 401));
     }
 
     // Add user to req.body
-    req.body.user = req.user.id;
+    req.body.user = req.params.userId;
 
     const deck = await Deck.create(req.body);
 
@@ -142,7 +142,7 @@ exports.createDeck = async (req, res, next) => {
 exports.updateDeck = async (req, res, next) => {
   try {
     // Make sure user is authorised to access route
-    if (req.params.userId !== req.user.id) {
+    if (req.params.userId !== req.user.id && req.user.role !== 'admin') {
       return next(new ErrorResponse(`User ${req.user.id} is not authorized to access this route`, 401));
     }
 
@@ -166,7 +166,7 @@ exports.updateDeck = async (req, res, next) => {
 exports.deleteDeck = async (req, res, next) => {
   try {
     // Make sure user is authorised to access route
-    if (req.params.userId !== req.user.id) {
+    if (req.params.userId !== req.user.id && req.user.role !== 'admin') {
       return next(new ErrorResponse(`User ${req.user.id} is not authorized to access this route`, 401));
     }
 

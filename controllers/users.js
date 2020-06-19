@@ -33,6 +33,10 @@ exports.getSingleUser = async (req, res, next) => {
 
     const user = await User.findById(req.params.id);
 
+    if (!user) {
+      return next(new ErrorResponse(`User with id ${req.params.id} does not exist`));
+    }
+
     res.status(200).json({ success: true, data: user });
   } catch (err) {
     next(err);
@@ -52,6 +56,10 @@ exports.updateUser = async (req, res, next) => {
 
     const user = await User.findByIdAndUpdate(req.params.id, req.body);
 
+    if (!user) {
+      return next(new ErrorResponse(`User with id ${req.params.id} does not exist`));
+    }
+
     res.status(200).json({ success: true, data: user });
   } catch (err) {
     next(err);
@@ -69,7 +77,13 @@ exports.deleteUser = async (req, res, next) => {
       return next(new ErrorResponse(`User ${req.user.id} is not authorized to access this route`, 401));
     }
 
-    await User.findByIdAndDelete(req.params.id);
+    const user = await User.findById(req.params.id);
+
+    if (!user) {
+      return next(new ErrorResponse(`User with id ${req.params.id} does not exist`));
+    }
+
+    user.remove();
 
     res.status(200).json({ success: true, data: [] });
   } catch (err) {

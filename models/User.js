@@ -36,6 +36,20 @@ const UserSchema = new mongoose.Schema({
   toObject: { virtuals: true },
 });
 
+
+// Cascade delete deck when a user is deleted
+UserSchema.pre('remove', async function (next) {
+  console.log(`Vocabulary being removed from user ${this._id}`);
+
+  await this.model('Vocabulary').deleteMany({ user: this._id });
+
+  console.log(`Decks being removed from user ${this._id}`);
+
+  await this.model('Deck').deleteMany({ user: this._id });
+  next();
+});
+
+
 // Reverse populate with virtuals
 UserSchema.virtual('decks', {
   ref: 'Deck',
@@ -65,14 +79,6 @@ UserSchema.methods.getSignedJwtToken = function () {
 UserSchema.methods.matchPassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
-
-// Cascade delete deck when a user is deleted
-UserSchema.pre('remove', async function (next) {
-  console.log(`Decks being removed from user ${this._id}`);
-
-  await this.model('Deck').deleteMany({ deck: this._id });
-  next();
-});
 
 // Generate and hash password token
 UserSchema.methods.getResetPasswordToken = function () {

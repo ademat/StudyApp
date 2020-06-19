@@ -9,7 +9,7 @@ const Deck = require('../models/Deck');
 exports.getVocabulary = async (req, res, next) => {
   try {
     // Make sure user is authorised to access route
-    if (req.params.userId !== req.user.id) {
+    if (req.params.userId !== req.user.id && req.user.role !== 'admin') {
       return next(new ErrorResponse(`User ${req.user.id} is not authorized to access this route`, 401));
     }
 
@@ -42,7 +42,7 @@ exports.getVocabulary = async (req, res, next) => {
 exports.getSingleVocabulary = async (req, res, next) => {
   try {
     // Make sure user is authorised to access route
-    if (req.params.userId !== req.user.id) {
+    if (req.params.userId !== req.user.id && req.user.role !== 'admin') {
       return next(new ErrorResponse(`User ${req.user.id} is not authorized to access this route`, 401));
     }
 
@@ -70,7 +70,7 @@ exports.getSingleVocabulary = async (req, res, next) => {
 exports.addVocabulary = async (req, res, next) => {
   try {
     // Make sure user is authorised to access route
-    if (req.params.userId !== req.user.id) {
+    if (req.params.userId !== req.user.id && req.user.role !== 'admin') {
       return next(new ErrorResponse(`User ${req.user.id} is not authorized to access this route`, 401));
     }
 
@@ -101,7 +101,7 @@ exports.addVocabulary = async (req, res, next) => {
 exports.updateVocabulary = async (req, res, next) => {
   try {
     // Make sure user is authorised to access route
-    if (req.params.userId !== req.user.id) {
+    if (req.params.userId !== req.user.id && req.user.role !== 'admin') {
       return next(new ErrorResponse(`User ${req.user.id} is not authorized to access this route`, 401));
     }
 
@@ -131,7 +131,7 @@ exports.updateVocabulary = async (req, res, next) => {
 exports.deleteVocabulary = async (req, res, next) => {
   try {
     // Make sure user is authorised to access route
-    if (req.params.userId !== req.user.id) {
+    if (req.params.userId !== req.user.id && req.user.role !== 'admin') {
       return next(new ErrorResponse(`User ${req.user.id} is not authorized to access this route`, 401));
     }
 
