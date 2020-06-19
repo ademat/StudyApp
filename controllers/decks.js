@@ -128,6 +128,13 @@ exports.createDeck = async (req, res, next) => {
     // Add user to req.body
     req.body.user = req.params.userId;
 
+    // Look for deck name in database to ensure it is unique
+    // const deckbyName = await Deck.findOne({ name: req.body.name, user: req.params.userId });
+
+    // if (deckbyName) {
+    //   return `Deck with name ${req.body.name} already exists`;
+    // }
+
     const deck = await Deck.create(req.body);
 
     res.json({ succes: true, data: deck });

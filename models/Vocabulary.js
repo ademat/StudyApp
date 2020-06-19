@@ -3,7 +3,6 @@ const mongoose = require('mongoose');
 const VocabularySchema = new mongoose.Schema({
   front: {
     type: String,
-    unique: true,
     required: [true, 'Please add vocabulary front side'],
   },
   back: {
