@@ -84,6 +84,13 @@ exports.addVocabulary = async (req, res, next) => {
       return next(new ErrorResponse(`Deck with id ${req.params.deckId} was not found`, 404));
     }
 
+    // Look for vocabulary front in deck to ensure it is unique
+    const vocabularybyName = await Vocabulary.findOne({ front: req.body.front, user: req.params.userId, deck: req.params.deckId });
+
+    if (vocabularybyName) {
+      return next(new ErrorResponse(`Vocabulary with front ${req.body.front} already exists`, 400));
+    }
+
     const vocabulary = await Vocabulary.create(req.body);
 
     res.status(200).json({
@@ -109,6 +116,16 @@ exports.updateVocabulary = async (req, res, next) => {
 
     if (vocabulary.length === 0) {
       return next(new ErrorResponse(`Vocabulary with id ${req.params.id} was not found`, 404));
+    }
+
+    // Look for vocabulary front in deck to ensure it is unique
+    const vocabularybyName = await Vocabulary.findOne({ front: req.body.front, user: req.params.userId, deck: vocabulary[0].deck });
+
+    console.log(`${vocabulary[0].deck}`);
+
+
+    if (vocabularybyName) {
+      return next(new ErrorResponse(`Vocabulary with front ${req.body.front} already exists`, 400));
     }
 
     vocabulary = await Vocabulary.findByIdAndUpdate(req.params.id, req.body, {

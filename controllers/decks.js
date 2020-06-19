@@ -129,11 +129,11 @@ exports.createDeck = async (req, res, next) => {
     req.body.user = req.params.userId;
 
     // Look for deck name in database to ensure it is unique
-    // const deckbyName = await Deck.findOne({ name: req.body.name, user: req.params.userId });
+    const deckbyName = await Deck.findOne({ name: req.body.name, user: req.params.userId });
 
-    // if (deckbyName) {
-    //   return `Deck with name ${req.body.name} already exists`;
-    // }
+    if (deckbyName) {
+      return next(new ErrorResponse(`Deck with name ${req.body.name} already exists`, 400));
+    }
 
     const deck = await Deck.create(req.body);
 
@@ -157,6 +157,13 @@ exports.updateDeck = async (req, res, next) => {
 
     if (deck.length === 0) {
       return next(new ErrorResponse(`Deck not found with id of ${req.params.id}`, 404));
+    }
+
+    // Look for deck name in database to ensure it is unique
+    const deckbyName = await Deck.findOne({ name: req.body.name, user: req.params.userId });
+
+    if (deckbyName) {
+      return next(new ErrorResponse(`Deck with name ${req.body.name} already exists`, 400));
     }
 
     deck = await Deck.findByIdAndUpdate(req.params.id, req.body);
