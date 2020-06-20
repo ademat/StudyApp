@@ -3,22 +3,17 @@ const Vocabulary = require('../models/Vocabulary');
 const Deck = require('../models/Deck');
 
 // @desc    Get all available vocabulary
-// @url     GET /api/v1/vocabulary/:userId
-// @url     GET /api/v1/decks/:userId/:decksId/vocabulary
+// @url     GET /api/v1/vocabulary/
+// @url     GET /api/v1/decks/:decksId/vocabulary
 // @access  private
 exports.getVocabulary = async (req, res, next) => {
   try {
-    // Make sure user is authorised to access route
-    if (req.params.userId !== req.user.id && req.user.role !== 'admin') {
-      return next(new ErrorResponse(`User ${req.user.id} is not authorized to access this route`, 401));
-    }
-
     let query;
 
     if (req.params.deckId) {
-      query = Vocabulary.find({ deck: req.params.deckId, user: req.params.userId });
+      query = Vocabulary.find({ deck: req.params.deckId, user: req.user.id });
     } else {
-      query = Vocabulary.find({ user: req.params.userId }).populate({
+      query = Vocabulary.find({ user: req.user.id }).populate({
         path: 'deck',
         select: 'name',
       });
@@ -37,16 +32,11 @@ exports.getVocabulary = async (req, res, next) => {
 };
 
 // @desc    Get single vocabulary
-// @url     GET /api/v1/vocabulary/:userId/:id
+// @url     GET /api/v1/vocabulary/:id
 // @access  private
 exports.getSingleVocabulary = async (req, res, next) => {
   try {
-    // Make sure user is authorised to access route
-    if (req.params.userId !== req.user.id && req.user.role !== 'admin') {
-      return next(new ErrorResponse(`User ${req.user.id} is not authorized to access this route`, 401));
-    }
-
-    const vocabulary = await Vocabulary.find({ _id: req.params.id, user: req.params.userId }).populate({
+    const vocabulary = await Vocabulary.find({ _id: req.params.id, user: req.user.id }).populate({
       path: 'deck',
       select: 'name',
     });
@@ -65,27 +55,22 @@ exports.getSingleVocabulary = async (req, res, next) => {
 };
 
 // @desc    Add single vocabulary
-// @url     POST /api/v1/decks/:deckId/vocabulary/:userId
+// @url     POST /api/v1/decks/:deckId/vocabulary/
 // @access  private
 exports.addVocabulary = async (req, res, next) => {
   try {
-    // Make sure user is authorised to access route
-    if (req.params.userId !== req.user.id && req.user.role !== 'admin') {
-      return next(new ErrorResponse(`User ${req.user.id} is not authorized to access this route`, 401));
-    }
-
     req.body.deck = req.params.deckId;
 
-    req.body.user = req.params.userId;
+    req.body.user = req.user.id;
 
-    const deck = await Deck.find({ _id: req.params.deckId, user: req.params.userId });
+    const deck = await Deck.find({ _id: req.params.deckId, user: req.user.id });
 
     if (deck.length === 0) {
       return next(new ErrorResponse(`Deck with id ${req.params.deckId} was not found`, 404));
     }
 
     // Look for vocabulary front in deck to ensure it is unique
-    const vocabularybyName = await Vocabulary.findOne({ front: req.body.front, user: req.params.userId, deck: req.params.deckId });
+    const vocabularybyName = await Vocabulary.findOne({ front: req.body.front, user: req.user.id, deck: req.params.deckId });
 
     if (vocabularybyName) {
       return next(new ErrorResponse(`Vocabulary with front ${req.body.front} already exists`, 400));
@@ -103,23 +88,18 @@ exports.addVocabulary = async (req, res, next) => {
 };
 
 // @desc    Update vocabulary
-// @url     PUT /api/v1/decks/:userId/:id
+// @url     PUT /api/v1/decks/:id
 // @access  private
 exports.updateVocabulary = async (req, res, next) => {
   try {
-    // Make sure user is authorised to access route
-    if (req.params.userId !== req.user.id && req.user.role !== 'admin') {
-      return next(new ErrorResponse(`User ${req.user.id} is not authorized to access this route`, 401));
-    }
-
-    let vocabulary = await Vocabulary.find({ _id: req.params.id, user: req.params.userId });
+    let vocabulary = await Vocabulary.find({ _id: req.params.id, user: req.user.id });
 
     if (vocabulary.length === 0) {
       return next(new ErrorResponse(`Vocabulary with id ${req.params.id} was not found`, 404));
     }
 
     // Look for vocabulary front in deck to ensure it is unique
-    const vocabularybyName = await Vocabulary.findOne({ front: req.body.front, user: req.params.userId, deck: vocabulary[0].deck });
+    const vocabularybyName = await Vocabulary.findOne({ front: req.body.front, user: req.user.id, deck: vocabulary[0].deck });
 
     console.log(`${vocabulary[0].deck}`);
 
@@ -143,16 +123,11 @@ exports.updateVocabulary = async (req, res, next) => {
 };
 
 // @desc    Delete vocabulary
-// @url     DELETE /api/v1/decks/:userId/:id
+// @url     DELETE /api/v1/decks/:id
 // @access  private
 exports.deleteVocabulary = async (req, res, next) => {
   try {
-    // Make sure user is authorised to access route
-    if (req.params.userId !== req.user.id && req.user.role !== 'admin') {
-      return next(new ErrorResponse(`User ${req.user.id} is not authorized to access this route`, 401));
-    }
-
-    const vocabulary = await Vocabulary.find({ _id: req.params.id, user: req.params.userId });
+    const vocabulary = await Vocabulary.find({ _id: req.params.id, user: req.user.id });
 
     if (vocabulary.length === 0) {
       return next(new ErrorResponse(`Vocabulary with id ${req.params.id} was not found`, 404));

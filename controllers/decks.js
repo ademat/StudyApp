@@ -3,16 +3,11 @@ const Deck = require('../models/Deck');
 const Vocabulary = require('../models/Vocabulary');
 
 // @desc    Get all available decks
-// @url     GET /api/v1/decks/:userId/
+// @url     GET /api/v1/decks/
 // @access  private
 exports.getAllDecks = async (req, res, next) => {
   try {
-    // Make sure user is authorised to access route
-    if (req.params.userId !== req.user.id && req.user.role !== 'admin') {
-      return next(new ErrorResponse(`User ${req.user.id} is not authorized to access this route`, 401));
-    }
-
-    const all_decks = await Deck.find({ user: req.params.userId }).populate('vocabulary');
+    const all_decks = await Deck.find({ user: req.user.id }).populate('vocabulary');
 
     // eslint-disable-next-line no-inner-declarations
     async function asyncForEach(array, callback) {
@@ -25,7 +20,7 @@ exports.getAllDecks = async (req, res, next) => {
       await Vocabulary.getVocabCount(deck._id);
     });
 
-    const decks = await Deck.find({ user: req.params.userId }).populate('vocabulary');
+    const decks = await Deck.find({ user: req.user.id }).populate('vocabulary');
 
     // let query;
 
@@ -95,16 +90,11 @@ exports.getAllDecks = async (req, res, next) => {
 };
 
 // @desc    Get a deck
-// @url     GET /api/v1/decks/:userId/:id
+// @url     GET /api/v1/decks/:id
 // @access  private
 exports.getDeck = async (req, res, next) => {
   try {
-    // Make sure user is authorised to access route
-    if (req.params.userId !== req.user.id && req.user.role !== 'admin') {
-      return next(new ErrorResponse(`User ${req.user.id} is not authorized to access this route`, 401));
-    }
-
-    const deck = await Deck.find({ _id: req.params.id, user: req.params.userId });
+    const deck = await Deck.find({ _id: req.params.id, user: req.user.id });
 
     if (deck.length === 0) {
       return next(new ErrorResponse(`Deck not found with id of ${req.params.id}`, 404));
@@ -116,20 +106,15 @@ exports.getDeck = async (req, res, next) => {
 };
 
 // @desc    Create a deck
-// @url     POST /api/v1/decks/:userId
+// @url     POST /api/v1/decks/
 // @access  private
 exports.createDeck = async (req, res, next) => {
   try {
-    // Make sure user is authorised to access route
-    if (req.params.userId !== req.user.id && req.user.role !== 'admin') {
-      return next(new ErrorResponse(`User ${req.user.id} is not authorized to access this route`, 401));
-    }
-
     // Add user to req.body
-    req.body.user = req.params.userId;
+    req.body.user = req.user.id;
 
     // Look for deck name in database to ensure it is unique
-    const deckbyName = await Deck.findOne({ name: req.body.name, user: req.params.userId });
+    const deckbyName = await Deck.findOne({ name: req.body.name, user: req.user.id });
 
     if (deckbyName) {
       return next(new ErrorResponse(`Deck with name ${req.body.name} already exists`, 400));
@@ -144,23 +129,18 @@ exports.createDeck = async (req, res, next) => {
 };
 
 // @desc    Update a deck
-// @url     PUT /api/v1/decks/:userId/:id
+// @url     PUT /api/v1/decks/:id
 // @access  private
 exports.updateDeck = async (req, res, next) => {
   try {
-    // Make sure user is authorised to access route
-    if (req.params.userId !== req.user.id && req.user.role !== 'admin') {
-      return next(new ErrorResponse(`User ${req.user.id} is not authorized to access this route`, 401));
-    }
-
-    let deck = await Deck.find({ _id: req.params.id, user: req.params.userId });
+    let deck = await Deck.find({ _id: req.params.id, user: req.user.id });
 
     if (deck.length === 0) {
       return next(new ErrorResponse(`Deck not found with id of ${req.params.id}`, 404));
     }
 
     // Look for deck name in database to ensure it is unique
-    const deckbyName = await Deck.findOne({ name: req.body.name, user: req.params.userId });
+    const deckbyName = await Deck.findOne({ name: req.body.name, user: req.user.id });
 
     if (deckbyName) {
       return next(new ErrorResponse(`Deck with name ${req.body.name} already exists`, 400));
@@ -179,12 +159,7 @@ exports.updateDeck = async (req, res, next) => {
 // @access  private
 exports.deleteDeck = async (req, res, next) => {
   try {
-    // Make sure user is authorised to access route
-    if (req.params.userId !== req.user.id && req.user.role !== 'admin') {
-      return next(new ErrorResponse(`User ${req.user.id} is not authorized to access this route`, 401));
-    }
-
-    const deck = await Deck.find({ _id: req.params.id, user: req.params.userId });
+    const deck = await Deck.find({ _id: req.params.id, user: req.user.id });
 
     if (deck.length === 0) {
       return next(new ErrorResponse(`Deck not found with id of ${req.params.id}`, 404));

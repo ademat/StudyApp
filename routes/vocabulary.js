@@ -13,7 +13,7 @@ const {
   deleteVocabulary,
 } = require('../controllers/vocabulary');
 
-router.route('/:userId/').get(protect, getVocabulary).post(protect, addVocabulary);
-router.route('/:userId/:id').get(protect, getSingleVocabulary).put(protect, updateVocabulary).delete(protect, deleteVocabulary);
+router.route('/').get(protect, getVocabulary).post(protect, addVocabulary);
+router.route('/:id').get(protect, getSingleVocabulary).put(protect, updateVocabulary).delete(protect, deleteVocabulary);
 
 module.exports = router;

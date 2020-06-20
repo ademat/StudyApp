@@ -1,6 +1,6 @@
 const express = require('express');
 const dotenv = require('dotenv');
-const colors = require('colors');
+require('colors');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const deckRoutes = require('./routes/decks');
