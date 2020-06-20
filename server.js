@@ -2,6 +2,7 @@ const express = require('express');
 const dotenv = require('dotenv');
 const colors = require('colors');
 const cookieParser = require('cookie-parser');
+const cors = require('cors');
 const deckRoutes = require('./routes/decks');
 const vocabularyRoutes = require('./routes/vocabulary');
 const authRoutes = require('./routes/auth');
@@ -12,6 +13,8 @@ const errorHandler = require('./middleware/error');
 dotenv.config({ path: './config/config.env' });
 
 const app = express();
+
+app.use(cors());
 
 app.use(express.json());
 
