@@ -41,7 +41,7 @@ exports.getVocabulary = async (req, res, next) => {
 // @access  private
 exports.getReviews = async (req, res, next) => {
   try {
-    const query = Vocabulary.find({ deck: req.params.deckId, user: req.user.id, reviewDate: { $lte: Date.now() } }).populate(
+    const query = Vocabulary.findOne({ deck: req.params.deckId, user: req.user.id, reviewDate: { $lte: Date.now() } }).populate(
       {
         path: 'deck',
         select: 'name',
