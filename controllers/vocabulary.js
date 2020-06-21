@@ -138,10 +138,36 @@ exports.updateVocabulary = async (req, res, next) => {
       return next(new ErrorResponse(`Vocabulary with front ${req.body.front} already exists`, 400));
     }
 
+    let reviewDate = Date.now();
+
+
+    switch (req.body.status) {
+      case 2:
+        reviewDate += 1000 * 60 * 60 * 24;
+        break;
+      case 3:
+        reviewDate += 1000 * 60 * 60 * 24 * 4;
+        break;
+      case 4:
+        reviewDate += 1000 * 60 * 60 * 24 * 7;
+        break;
+      case 5:
+        reviewDate += 1000 * 60 * 60 * 24 * 30;
+        break;
+      case 6:
+        reviewDate = null;
+        break;
+      default:
+        break;
+    }
+
+    req.body.reviewDate = reviewDate;
+
     vocabulary = await Vocabulary.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
       runValidators: true,
     });
+
 
     res.status(200).json({
       success: true,

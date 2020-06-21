@@ -71,16 +71,16 @@ VocabularySchema.pre('remove', function () {
 VocabularySchema.pre('save', function (next) {
   switch (this.status) {
     case 2:
-      this.reviewDate.setDate(this.reviewDate.getDate() + 1);
+      this.reviewDate = Date.now() + 1000 * 60 * 60 * 24;
       break;
     case 3:
-      this.reviewDate.setDate(this.reviewDate.getDate() + 4);
+      this.reviewDate = Date.now() + 1000 * 60 * 60 * 24 * 4;
       break;
     case 4:
-      this.reviewDate.setDate(this.reviewDate.getDate() + 7);
+      this.reviewDate = Date.now() + 1000 * 60 * 60 * 24 * 7;
       break;
     case 5:
-      this.reviewDate.setDate(this.reviewDate.getDate() + 30);
+      this.reviewDate = Date.now() + 1000 * 60 * 60 * 24 * 30;
       break;
     case 6:
       this.reviewDate = null;
@@ -90,5 +90,6 @@ VocabularySchema.pre('save', function (next) {
   }
   next();
 });
+
 
 module.exports = mongoose.model('Vocabulary', VocabularySchema);
