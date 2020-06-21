@@ -36,6 +36,30 @@ exports.getVocabulary = async (req, res, next) => {
   }
 };
 
+// @desc    Get vocabulary for review
+// @url     GET /api/v1/decks/:decksId/vocabulary/review
+// @access  private
+exports.getReviews = async (req, res, next) => {
+  try {
+    const query = Vocabulary.find({ deck: req.params.deckId, user: req.user.id, reviewDate: { $lte: Date.now() } }).populate(
+      {
+        path: 'deck',
+        select: 'name',
+      },
+    );
+
+    const vocabulary = await query;
+
+    res.status(200).json({
+      success: true,
+      count: vocabulary.length,
+      data: vocabulary,
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
 // @desc    Get single vocabulary
 // @url     GET /api/v1/vocabulary/:id
 // @access  private
