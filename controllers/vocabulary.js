@@ -41,19 +41,20 @@ exports.getVocabulary = async (req, res, next) => {
 // @access  private
 exports.getReviews = async (req, res, next) => {
   try {
-    const query = Vocabulary.findOne({ deck: req.params.deckId, user: req.user.id, reviewDate: { $lte: Date.now() } }).populate(
-      {
-        path: 'deck',
-        select: 'name',
-      },
-    );
+    const query = Vocabulary.find({
+      deck: req.params.deckId,
+      user: req.user.id,
+      reviewDate: { $lte: Date.now() },
+    });
 
     const vocabulary = await query;
+
+    const randomIndex = Math.floor(Math.random() * vocabulary.length);
 
     res.status(200).json({
       success: true,
       count: vocabulary.length,
-      data: vocabulary,
+      data: vocabulary[randomIndex],
     });
   } catch (err) {
     next(err);
